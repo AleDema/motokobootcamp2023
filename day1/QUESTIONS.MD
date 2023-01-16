@@ -29,6 +29,7 @@ actor {
 ```
 
 - change_message is a query type function so the state changes are discarded after it ends and message isn't actually modified
+- 0 is not Text type
 
 
 4) False or True: we can remove the keyword async for return argument of a query function since queries are faster to answer.

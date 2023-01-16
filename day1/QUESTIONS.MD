@@ -2,15 +2,18 @@
 - 48GB stable memory, 4GB heap
 
 2) What is the issue with the following code sample?
+```
 actor {
   let counter : Nat = 0;
   public func increment_counter() : async () {
     counter := counter + 1;
   };
 }
+```
 - counter is an immutable value
 
 3) What is the issue with the following code sample?
+```
 actor {
   var message : Text = 0;
 
@@ -23,6 +26,7 @@ actor {
     return(message);
   };
 }
+```
 
 - change_message is a query type function so the state changes are discarded after it ends and message isn't actually modified
 

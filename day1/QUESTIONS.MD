@@ -10,7 +10,7 @@ actor {
   };
 }
 ```
-- counter is an immutable value
+- counter is an immutable value and can't be reassigned.
 
 3) What is the issue with the following code sample?
 ```
@@ -33,4 +33,5 @@ actor {
 
 
 4) False or True: we can remove the keyword async for return argument of a query function since queries are faster to answer.
+
 False

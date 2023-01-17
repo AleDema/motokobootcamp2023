@@ -39,3 +39,20 @@ actor {
 
 - "languages" array is mutable but its values aren't
 - show_languages is a shared function and can't return mutable state
+
+
+6) What is wrong with the following code?
+
+```
+actor {
+  var languages : [Text] = ["English", "German", "Chinese", "Japanese", "French"];
+
+  public func add_language(new_language: Text) : async [Text] {
+    languages := Array.append<Text>(languages, [new_language]);
+    return (languages);
+  };
+ 
+}
+```
+
+- Array module hasn't been imported, so function append gives unbound variable error

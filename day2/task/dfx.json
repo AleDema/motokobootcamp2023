@@ -8,6 +8,15 @@
       "main": "src/backend/Webpage/main.mo",
       "type": "motoko"
     },
+    "ledger": {
+      "type": "motoko",
+      "main": "src/backend/ledger/Canisters/Token.mo",
+      "remote": {
+        "id": {
+          "ic": "db3eq-6iaaa-aaaah-abz6a-cai"
+        }
+      }
+    },
     "frontend": {
       "dependencies": [
         "DAO",
@@ -25,7 +34,7 @@
   },
   "defaults": {
     "build": {
-      "packtool": ""
+      "packtool": "mops sources"
     }
   },
   "networks": {

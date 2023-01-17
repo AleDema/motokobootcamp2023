@@ -37,5 +37,5 @@ actor {
 }
 ```
 
-- "languages" array is mutable but its values aren't, should be 
+- "languages" array is mutable but its values aren't
 - show_languages is a shared function and can't return mutable state

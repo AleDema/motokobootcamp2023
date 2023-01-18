@@ -36,6 +36,7 @@ import {
   RouterProvider,
   Route
 } from "react-router-dom";
+import ProposalPage from "@pages/ProposalPage"
 
 function App() {
 
@@ -95,6 +96,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route index element={<App />} />
     <Route path="/home" element={<Home />} />
     <Route path="/dao" element={<DaoPage />} />
+    <Route path="/proposal:id" element={<ProposalPage />} />
   </Route>
 ));
 

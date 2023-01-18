@@ -1,3 +1,8 @@
+type VotingOptions = 
+ variant {
+   approve;
+   reject;
+ };
 type Result = 
  variant {
    err: text;
@@ -12,7 +17,7 @@ type ProposalState =
 type ProposalId = nat;
 type Proposal = 
  record {
-   accept_votes: nat;
+   approve_votes: nat;
    change: text;
    description: text;
    id: ProposalId;
@@ -24,5 +29,5 @@ service : {
   get_all_proposals: () -> (vec Proposal) query;
   get_proposal: (ProposalId) -> (Result) query;
   submit_proposal: (text, text, text) -> ();
-  vote: (Proposal) -> ();
+  vote: (ProposalId, VotingOptions) -> ();
 }

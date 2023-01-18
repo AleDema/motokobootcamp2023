@@ -18,7 +18,8 @@ actor Webpage {
     stable var body = "Hello World";
 
     //must be called on init to work
-    public shared func update_body(msg : Text) : async () {
+    public shared (caller) func update_body(msg : Text) : async () {
+        //add caller check
         body := msg;
         update_asset_hash()
     };
@@ -60,7 +61,7 @@ actor Webpage {
 
     func main_page() : Blob {
         return T.encodeUtf8(
-            "This canister demonstrates certified HTTP assets from Motoko.\n" # "\n" # "You can see this text at https://" # debug_show my_id() # ".ic0.app/\n" # "(note, no raw!) and it will validate!\n" # body,
+            "https://" # debug_show my_id() # ".ic0.app/\n" # body,
         )
     };
 

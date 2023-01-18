@@ -2,6 +2,8 @@ import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
 import Option "mo:base/Option";
+import Debug "mo:base/Debug";
+//import Webpage "canister:Webpage";
 
 actor {
 
@@ -12,7 +14,7 @@ actor {
         description : Text;
         change : Text;
         state : ProposalState;
-        accept_votes : Nat;
+        approve_votes : Nat;
         reject_votes : Nat
     };
 
@@ -43,16 +45,19 @@ actor {
     };
 
     let proposals = Buffer.Buffer<Proposal>(100);
+    var MIN_VP_REQUIRED = 1;
+    var PROPOSAL_VP_THESHOLD = 100;
     //struct for neurons, hashmap? <Principal, Buffer.Buffer<Neuron>>
     //struct for user balances?  <Principal, Nat>
 
-    public func submit_proposal(title : Text, description : Text, change : Text) : async () {
+    public shared (msg) func submit_proposal(title : Text, description : Text, change : Text) : async () {
+        //check balance TODO
         let p : Proposal = {
             id = proposals.size();
             title = title;
             description = description;
             change = change;
-            accept_votes = 0;
+            approve_votes = 0;
             reject_votes = 0;
             state = #open
         };
@@ -74,12 +79,68 @@ actor {
         Buffer.toArray(proposals)
     };
 
-    public shared (caller) func vote(p : Proposal) : async () {
+    public shared ({ caller }) func vote(id : ProposalId, choice : VotingOptions) : async () {
+
+        Debug.print("HELLO");
+        Debug.print(debug_show (id));
+        Debug.print(debug_show (choice));
+        //check if already voted? TODO
+
+        //if approved can't vote' TODO
+
+        //check balance TODO
+        let user_vp = verify_balance(caller);
+        if (user_vp <= MIN_VP_REQUIRED) return;
+        Debug.print("HELLO2");
+        //vote
+        let p : Proposal = proposals.get(id);
+        Debug.print("HELLO3");
+        var state = p.state;
+        var approve_votes = p.approve_votes;
+        var reject_votes = p.reject_votes;
+        switch choice {
+            case (#approve) {
+                Debug.print("im here");
+                if (p.approve_votes + user_vp >= PROPOSAL_VP_THESHOLD) {
+                    state := #approved
+                };
+                approve_votes := p.approve_votes + user_vp
+            };
+            case (#reject) {
+                Debug.print("reject");
+                if (p.reject_votes + user_vp >= PROPOSAL_VP_THESHOLD) {
+                    state := #rejected
+                };
+                reject_votes := p.reject_votes + user_vp
+            }
+        };
+
+        let updated_p = {
+            p with state = state;
+            reject_votes = reject_votes;
+            approve_votes = approve_votes
+        };
+
+        proposals.put(p.id, updated_p);
+        Debug.print(debug_show (proposals.get(p.id)));
+        if (state == #approved) execute_change(p.change);
 
     };
 
-    private func verify_balance(caller : Principal) : async Nat {
+    private func verify_balance(user : Principal) : Nat {
         return 10; //TEMP
+    };
+
+    private func execute_change(change : Text) : () {
+        //TODO
+        //Webpage.update_body(change)
     }
+
+    //advanced
+
+    // modify_parameters
+    // quadratic_voting
+    // createNeuron
+    // dissolveNeuron
 
 }

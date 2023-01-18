@@ -2,6 +2,8 @@ import Nat "mo:base/Nat";
 import Iter "mo:base/Iter";
 import Char "mo:base/Char";
 import Buffer "mo:base/Buffer";
+import Text "mo:base/Text";
+import Array "mo:base/Array";
 
 actor {
 
@@ -37,18 +39,36 @@ actor {
         return fact;
     };
 
+    // alternative method
+    // public query func number_of_words(t : Text) : async Nat {
+    //     var word_count = 0;
+    //     var check : Bool = false;
+    //     label wc for (i in t.chars()) {
+    //         if (check and Char.isWhitespace(i)) check := false;
+
+    //         if (not Char.isWhitespace(i) and not check) {
+    //             check := true;
+    //             word_count := word_count +1;
+    //         };
+    //     };
+    //     return word_count;
+    // };
+
+    type Pattern = { #char : Char; #text : Text; #predicate : (Char -> Bool) };
+
     public query func number_of_words(t : Text) : async Nat {
         var word_count = 0;
-        var check : Bool = false;
-        label wc for (i in t.chars()) {
-            if (check and Char.isWhitespace(i)) check := false;
-
-            if (not Char.isWhitespace(i) and not check) {
-                check := true;
-                word_count := word_count +1;
-            };
-        };
-        return word_count;
+        let ws : Pattern = #char(' ');
+        let arr = Iter.toArray(Text.split(t, ws));
+        Array.filter<Text>(
+            arr,
+            func(e : Text) {
+                if (Text.size(e) != 0) {
+                    return true;
+                };
+                return false;
+            },
+        ).size();
     };
 
     public query func convert_to_binary(n : Nat) : async Text {

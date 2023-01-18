@@ -1,0 +1,5 @@
+actor {
+
+    var text : Text = "";
+
+}

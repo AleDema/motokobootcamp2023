@@ -70,6 +70,7 @@ function App() {
 
       <div>
         <Profile />
+        <Link to="/dao">dApp</Link>
         {isConnected ? <Link to="/dao">DAO</Link> : null}
       </div>
     </>

@@ -28,10 +28,13 @@ const ProposalPage = () => {
     const accept = async () => {
         let n = BigInt(parseInt(id));
         DAO.vote(n, { approve: null })
+        //ghetto solution
+        setTimeout(() => fetchProposal(n), 2000);
     }
     const reject = async () => {
         let n = BigInt(parseInt(id));
         DAO.vote(n, { reject: null })
+        setTimeout(() => fetchProposal(n), 2000);
     }
 
     React.useEffect(() => {
@@ -41,18 +44,21 @@ const ProposalPage = () => {
 
     return (
         <div>
-            <p>{proposal.title}</p>
-            <p>{proposal.description}</p>
-            <p>{proposal.change}</p>
-            <p>{JSON.stringify(proposal.state)}</p>
-            <p>{parseInt(proposal.approve_votes)}</p>
-            <p>{parseInt(proposal.reject_votes)}</p>
-            <button onClick={accept}>
-                Accept
-            </button>
-            <button onClick={reject}>
-                Reject
-            </button>
+            <p>{proposal?.title}</p>
+            <p>{proposal?.description}</p>
+            <p>{proposal?.change}</p>
+            <p>{JSON.stringify(proposal?.state)}</p>
+            <p>{parseInt(proposal?.approve_votes)}</p>
+            <p>{parseInt(proposal?.reject_votes)}</p>
+            {proposal?.state?.approved === null || proposal?.state?.rejected === null ? null :
+                <div>
+                    <button onClick={accept}>
+                        Accept
+                    </button>
+                    <button onClick={reject}>
+                        Reject
+                    </button>
+                </div>}
         </div>
     );
 };

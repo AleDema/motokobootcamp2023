@@ -3,7 +3,7 @@ import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
 import Option "mo:base/Option";
 import Debug "mo:base/Debug";
-//import Webpage "canister:Webpage";
+// import Webpage "Webpage";
 
 actor {
 
@@ -18,13 +18,13 @@ actor {
         reject_votes : Nat
     };
 
-    type ProposalVotes = {
-        votes : [var Vote]
-    };
+    // pType : ProposalType
 
-    type ProposalData = {
-        proposal : Proposal;
-        proposalVotes : ProposalVotes
+    type ProposalType = {
+        #change_text; //just text
+        #update_min_vp; //just nat
+        #update_threshold; //just nat
+        #create_lottery // amount, price per, share %, winning %
     };
 
     type ProposalState = {
@@ -49,6 +49,7 @@ actor {
     var PROPOSAL_VP_THESHOLD = 100;
     //struct for neurons, hashmap? <Principal, Buffer.Buffer<Neuron>>
     //struct for user balances?  <Principal, Nat>
+    //struct for user votes?  <Principal, Map<id, vote>>
 
     public shared (msg) func submit_proposal(title : Text, description : Text, change : Text) : async () {
         //check balance TODO
@@ -86,15 +87,14 @@ actor {
         Debug.print(debug_show (choice));
         //check if already voted? TODO
 
-        //if approved can't vote' TODO
-
         //check balance TODO
         let user_vp = verify_balance(caller);
         if (user_vp <= MIN_VP_REQUIRED) return;
-        Debug.print("HELLO2");
-        //vote
+
         let p : Proposal = proposals.get(id);
-        Debug.print("HELLO3");
+        //if approved or rejectedcan't vote' TODO
+        if (p.state == #approved or p.state == #rejected) return;
+
         var state = p.state;
         var approve_votes = p.approve_votes;
         var reject_votes = p.reject_votes;

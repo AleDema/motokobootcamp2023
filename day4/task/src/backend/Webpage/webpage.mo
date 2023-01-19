@@ -25,22 +25,11 @@ actor Webpage {
     };
 
     public query func http_request(req : HttpRequest) : async HttpResponse {
-        // check if / is requested
-        if ((req.method, req.url) == ("GET", "/")) {
-            // If so, return the main page with with right headers
-            return {
-                status_code = 200;
-                headers = [("content-type", "text/plain"), certification_header()];
-                body = main_page();
-                streaming_strategy = null
-            }
-        } else {
-            return {
-                status_code = 404;
-                headers = [("content-type", "text/plain")];
-                body = "Error\n";
-                streaming_strategy = null
-            }
+        return {
+            status_code = 200;
+            headers = [("content-type", "text/plain"), certification_header()];
+            body = main_page();
+            streaming_strategy = null
         }
     };
 

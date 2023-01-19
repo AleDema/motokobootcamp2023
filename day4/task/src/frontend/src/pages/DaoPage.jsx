@@ -18,7 +18,7 @@ const DaoPage = () => {
         setProposals(await DAO.get_all_proposals());
         //console.log(proposals)
         proposals.map(function (e, i) {
-            console.log(JSON.stringify(e))
+            console.log((e))
         })
     }
 
@@ -30,7 +30,7 @@ const DaoPage = () => {
         setProposalChange("")
         //somehow refresh with new proposal
         //ghetto solution
-        setTimeout(fetchProposals, 2000);
+        setTimeout(fetchProposals, 1600);
     }
 
     useEffect(() => {

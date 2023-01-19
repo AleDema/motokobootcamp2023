@@ -7,7 +7,7 @@ import Trie "mo:base/Trie";
 import Nat "mo:base/Nat";
 import Hash "mo:base/Hash";
 import Iter "mo:base/Iter";
-// import Webpage "Webpage";
+import Webpage "canister:Webpage";
 import G "./GovernanceTypes";
 // import Map "mo:hashmap/Map";
 import Map "../utils/Map";
@@ -25,7 +25,6 @@ actor {
     stable var PROPOSAL_VP_THESHOLD = 100;
     stable var IS_QUADRATIC = false;
     private stable var proposal_id_counter = 0;
-    //let proposals = Buffer.Buffer<Proposal>(100);
     let { ihash; nhash; thash; phash; calcHash } = Map;
     private stable let proposals = Map.new<Nat, Proposal>();
     //struct for neurons, hashmap? <Principal, Buffer.Buffer<Neuron>>
@@ -113,7 +112,7 @@ actor {
 
         ignore Map.put(proposals, nhash, p.id, updated_p);
         Debug.print(debug_show (Map.get(proposals, nhash, id)));
-        if (state == #approved) execute_change(p.change);
+        if (state == #approved) await execute_change(p.change);
 
     };
 
@@ -122,9 +121,9 @@ actor {
         return 10; //TEMP
     };
 
-    private func execute_change(change : Text) : () {
+    private func execute_change(change : Text) : async () {
         //TODO
-        //Webpage.update_body(change)
+        ignore Webpage.update_body(change)
     }
 
     //advanced

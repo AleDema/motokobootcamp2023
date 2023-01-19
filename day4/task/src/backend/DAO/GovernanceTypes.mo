@@ -4,19 +4,20 @@ module GovernanceTypes {
         id : ProposalId;
         title : Text;
         description : Text;
-        change : Text;
         state : ProposalState;
         approve_votes : Nat;
-        reject_votes : Nat
+        reject_votes : Nat;
+        change_data : ProposalType
     };
 
     // pType : ProposalType
 
     public type ProposalType = {
-        #change_text; //just text
-        #update_min_vp; //just nat
-        #update_threshold; //just nat
-        #create_lottery // amount, price per, share %, winning %
+        #change_text : Text; //just text
+        #update_min_vp : Nat; //just nat
+        #update_threshold : Nat; //just nat
+        #toggle_quadratic;
+        #create_lottery : (Nat, Nat, Nat, Nat) // amount, price per, share %, winning %
     };
 
     public type ProposalState = {
@@ -31,7 +32,6 @@ module GovernanceTypes {
     };
 
     public type Vote = {
-        voter : Principal;
         voting_power : Nat;
         vote : VotingOptions
     }

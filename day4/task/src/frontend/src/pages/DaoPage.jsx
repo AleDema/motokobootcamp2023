@@ -7,12 +7,20 @@ import state from "../context/global"
 //CANISTER
 import { DAO } from "@declarations/DAO"
 
+const options = [
+    { value: "update_page", label: "update_page" },
+    { value: "update_min_vp", label: "update_min_vp" },
+    { value: "update_thresold", label: "update_thresold" },
+    { value: "toggle_quadratic", label: "toggle_quadratic" }
+];
+
 const DaoPage = () => {
 
     const [proposals, setProposals] = useState([{}]);
     const [proposalTitle, setProposalTitle] = useState("");
     const [proposalDescription, setProposalDescription] = useState("");
     const [proposalChange, setProposalChange] = useState("");
+    const [proposalType, setProposalType] = useState("");
 
     const fetchProposals = async () => {
         setProposals(await DAO.get_all_proposals());
@@ -46,6 +54,13 @@ const DaoPage = () => {
                 })}
             </div>
             <div className="flex flex-col space-y-4 w-screen items-center">
+                <select className="text-black  w-5/12" onChange={setProposalType}>
+                    {options.map((option) => (
+                        <option className="text-black  w-5/12" key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
                 <input className="text-black  w-5/12" type="text"
                     value={proposalTitle}
                     placeholder="Title"

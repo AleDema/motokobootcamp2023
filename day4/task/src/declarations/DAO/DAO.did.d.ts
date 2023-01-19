@@ -2,7 +2,7 @@ import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 
 export interface Proposal {
-  'id' : ProposalId,
+  'id' : ProposalId__1,
   'title' : string,
   'reject_votes' : bigint,
   'description' : string,
@@ -11,6 +11,7 @@ export interface Proposal {
   'change' : string,
 }
 export type ProposalId = bigint;
+export type ProposalId__1 = bigint;
 export type ProposalState = { 'open' : null } |
   { 'approved' : null } |
   { 'rejected' : null };

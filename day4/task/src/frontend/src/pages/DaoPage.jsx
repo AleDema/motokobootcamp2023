@@ -16,7 +16,10 @@ const DaoPage = () => {
 
     const fetchProposals = async () => {
         setProposals(await DAO.get_all_proposals());
-        console.log(proposals)
+        //console.log(proposals)
+        proposals.map(function (e, i) {
+            console.log(JSON.stringify(e))
+        })
     }
 
     const submitProposal = async () => {
@@ -39,7 +42,7 @@ const DaoPage = () => {
         <div>
             <div className="flex flex-col items-center">
                 {proposals.map(function (e, i) {
-                    return (<Link to={`/proposal${e.id}`}>{e.title + " " + e.id}</Link>)
+                    return (<Link to={`/proposal${e.id}`} key={e.id}>{e.title + " " + e.id}</Link>)
                 })}
             </div>
             <div className="flex flex-col space-y-4 w-screen items-center">

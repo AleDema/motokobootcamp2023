@@ -6,10 +6,11 @@ import Debug "mo:base/Debug";
 import Trie "mo:base/Trie";
 import Nat "mo:base/Nat";
 import Hash "mo:base/Hash";
+import Iter "mo:base/Iter";
 // import Webpage "Webpage";
 import G "./GovernanceTypes";
 // import Map "mo:hashmap/Map";
-import Map "../utils/Map/Map";
+import Map "../utils/Map";
 
 actor {
 
@@ -44,6 +45,7 @@ actor {
             state = #open
         };
         ignore Map.put(proposals, nhash, p.id, p);
+        Debug.print("CREATED PROPOSAL");
         proposal_id_counter := proposal_id_counter +1
     };
 
@@ -58,13 +60,15 @@ actor {
         }
     };
 
-    public query func get_all_proposals() : async [(Nat, Proposal)] {
-        Map.toArray(proposals)
+    public query func get_all_proposals() : async [Proposal] {
+        //Debug.print(debug_show (Map.toArray(proposals)));
+        let iter = Map.vals<Nat, Proposal>(proposals);
+        Iter.toArray(iter)
     };
 
     public shared ({ caller }) func vote(id : ProposalId, choice : VotingOptions) : async () {
 
-        Debug.print("HELLO");
+        Debug.print("vote");
         Debug.print(debug_show (id));
         Debug.print(debug_show (choice));
         //check if already voted? TODO
@@ -87,7 +91,6 @@ actor {
         var reject_votes = p.reject_votes;
         switch choice {
             case (#approve) {
-                Debug.print("im here");
                 if (p.approve_votes + user_vp >= PROPOSAL_VP_THESHOLD) {
                     state := #approved
                 };

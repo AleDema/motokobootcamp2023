@@ -14,13 +14,14 @@ type ProposalState =
    open;
    rejected;
  };
+type ProposalId__1 = nat;
 type ProposalId = nat;
 type Proposal = 
  record {
    approve_votes: nat;
    change: text;
    description: text;
-   id: ProposalId;
+   id: ProposalId__1;
    reject_votes: nat;
    state: ProposalState;
    title: text;

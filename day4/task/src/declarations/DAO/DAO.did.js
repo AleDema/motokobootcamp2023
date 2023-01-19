@@ -1,12 +1,12 @@
 export const idlFactory = ({ IDL }) => {
-  const ProposalId = IDL.Nat;
+  const ProposalId__1 = IDL.Nat;
   const ProposalState = IDL.Variant({
     'open' : IDL.Null,
     'approved' : IDL.Null,
     'rejected' : IDL.Null,
   });
   const Proposal = IDL.Record({
-    'id' : ProposalId,
+    'id' : ProposalId__1,
     'title' : IDL.Text,
     'reject_votes' : IDL.Nat,
     'description' : IDL.Text,
@@ -14,6 +14,7 @@ export const idlFactory = ({ IDL }) => {
     'approve_votes' : IDL.Nat,
     'change' : IDL.Text,
   });
+  const ProposalId = IDL.Nat;
   const Result = IDL.Variant({ 'ok' : Proposal, 'err' : IDL.Text });
   const VotingOptions = IDL.Variant({
     'reject' : IDL.Null,

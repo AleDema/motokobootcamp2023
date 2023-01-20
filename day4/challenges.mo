@@ -8,23 +8,25 @@ import Int8 "mo:base/Int8";
 import Iter "mo:base/Iter";
 
 actor {
-    type List<T> = L.List<T>;
 
-    // func unique<T>(l : List<T>, equal : (T, T) -> Bool) : List<T> {
-    //     let dups = HashMap.HashMap<T, Int8>(0, equal, T.hash);
-    //     List<T>.filter<T>(
-    //         l,
-    //         func(e) {
-    //             if (not dups.get(e)) {
-    //                 dups.put(e);
-    //                 return true;
-    //             };
-    //             return false;
-    //         },
-    //     );
-    // };
+    func unique<T>(l : L.List<T>, equal : (T, T) -> Bool) : L.List<T> {
+        let buffer = Buffer.Buffer<T>(L.size<T>(l));
+        L.filter<T>(
+            l,
+            func(e) {
 
-    func reverse<T>(l : List<T>) : List<T> {
+                if (not Buffer.contains<T>(buffer, e, equal)) {
+                    buffer.add(e);
+                    return true;
+                } else {
+                    return false;
+                };
+
+            },
+        );
+    };
+
+    func reverse<T>(l : L.List<T>) : L.List<T> {
         L.reverse<T>(l);
     };
 
@@ -33,7 +35,7 @@ actor {
     };
 
     func find_in_buffer<T>(buf : Buffer.Buffer<T>, val : T, equal : (T, T) -> Bool) : async Nat {
-        Option.get(Buffer.indexOf<T>(val, buf, equal), buf.size() +1) //not sure;
+        Option.get(Buffer.indexOf<T>(val, buf, equal), buf.size() +1);
     };
 
     let usernames = HashMap.HashMap<Principal, Text>(0, Principal.equal, Principal.hash);

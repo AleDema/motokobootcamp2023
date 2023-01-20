@@ -84,20 +84,18 @@ actor {
 
     public query func find_duplicates(a : [Nat]) : async [Nat] {
         let buffer = Buffer.Buffer<Nat>(a.size());
-        for (i in a.vals()) {
-            var count = 0;
-            label dups for (j in a.vals()) {
-                if (i == j) count := count +1;
-                if (count == 2 and not Buffer.contains<Nat>(buffer, i, Nat.equal)) {
-                    buffer.add(i);
-                    break dups;
+        let newArray = Array.filter<Nat>(
+            a,
+            func(n) {
+                if (not Buffer.contains<Nat>(buffer, n, Nat.equal)) {
+                    buffer.add(n);
+                    return true;
                 };
+                return false;
+            },
+        );
 
-            };
-        };
-
-        let array = Buffer.toArray(buffer);
-        return array;
+        return newArray;
     };
 
 };

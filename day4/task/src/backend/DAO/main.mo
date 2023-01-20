@@ -5,40 +5,27 @@ import Option "mo:base/Option";
 import Debug "mo:base/Debug";
 import Trie "mo:base/Trie";
 import Nat "mo:base/Nat";
+import Float "mo:base/Float";
 import Hash "mo:base/Hash";
 import Iter "mo:base/Iter";
 //import Webpage "canister:Webpage";
 import G "./GovernanceTypes";
+import N "./neuron";
 // import Map "mo:hashmap/Map";
 import Map "../utils/Map";
 
 actor {
 
-    type VotingPowerLogic = {
-        #basic;
-        #advanced
-    };
-
-    type NeuronState = {
-        #locked;
-        #dissolving;
-        #dissolved
-    };
-
-    type Neuron = {
-        id : Nat;
-        stake : Nat;
-        creation_date : Nat;
-        dissolve_delay : Nat;
-        state : NeuronState
-    };
-
+    type VotingPowerLogic = G.VotingPowerLogic;
     type ProposalId = G.ProposalId;
     type Proposal = G.Proposal;
     type ProposalType = G.ProposalType;
     type ProposalState = G.ProposalState;
     type VotingOptions = G.VotingOptions;
     type Vote = G.Vote;
+    type Neuron = N.Neuron;
+
+    let { ihash; nhash; thash; phash; calcHash } = Map;
 
     var DEV_MODE = true;
 
@@ -48,11 +35,10 @@ actor {
     private var current_vp_mode : VotingPowerLogic = #basic;
 
     private stable var proposal_id_counter = 0;
-    let { ihash; nhash; thash; phash; calcHash } = Map;
     private stable let proposals = Map.new<Nat, Proposal>();
     private stable let user_votes = Map.new<Principal, Map.Map<ProposalId, Vote>>();
-    private stable let neurons = Map.new<Principal, [Neuron]>();
-    private stable let user_balances = Map.new<Principal, Nat>();
+    private stable let neurons = Map.new<Principal, [Neuron]>(); //TODO rethink this struct
+    private stable let user_balances = Map.new<Principal, Float>();
 
     public shared (msg) func submit_proposal(title : Text, description : Text, change : ProposalType) : async () {
         if (verify_balance(msg.caller) < MIN_VP_REQUIRED) return;
@@ -94,14 +80,13 @@ actor {
         Debug.print(debug_show (id));
         Debug.print(debug_show (choice));
 
-        //check balance
-        let user_vp = verify_balance(caller);
+        let user_vp = get_voting_power(caller);
         if (user_vp <= MIN_VP_REQUIRED) return;
 
         let p : Proposal = do {
             switch (Map.get(proposals, nhash, id)) {
                 case (?proposal) proposal;
-                case (_) return //does it return null or return the func?
+                case (_) return //does it return null or return the func? TODO TEST
             }
         };
 
@@ -119,6 +104,7 @@ actor {
             second!
         };
 
+        //TODO TEST
         switch (test1, test2) {
             case (?exists1, ?exist2) {
                 hasVoted := true
@@ -151,7 +137,6 @@ actor {
                 approve_votes := p.approve_votes + user_vp
             };
             case (#reject) {
-                Debug.print("reject");
                 if (p.reject_votes + user_vp >= PROPOSAL_VP_THESHOLD) {
                     state := #rejected
                 };
@@ -224,20 +209,58 @@ actor {
         }
     };
 
-    public shared ({ caller }) func create_neuron(stake : Nat, dissolve_delay : Nat) : async () {
+    //todo
+    public shared ({ caller }) func deposit(amount : Float) : async () {
+
+    };
+    //todo
+    public shared ({ caller }) func withdraw(amount : Float, address : Principal) : async () {
 
     };
 
-    public shared ({ caller }) func dissolve_neuron(id : Nat) : async () {
+    public func internal_transfer(from : Principal, to : Principal, amount : Float) : () {
 
+    };
+
+    private func has_enough_balance(user : Principal, amount : Float) : Bool {
+        let test : ?Float = do ? {
+            let balance = Map.get(user_balances, phash, user);
+            balance!
+        };
+        switch (test) {
+            case (?balance) return (balance - amount >= 0);
+            case (_) false
+        }
+    };
+
+    public shared ({ caller }) func create_neuron(stake : Float, dissolve_delay : Nat) : async () {
+        //has_enough_balance
+        //internal_transfer
+    };
+
+    public shared ({ caller }) func dissolve_neuron(id : Nat) : async () {
+        //add to specific map
+    };
+
+    public shared ({ caller }) func stop_dissolve_neuron(id : Nat) : async () {
+
+    };
+
+    public shared ({ caller }) func set_neuron_lockup(id : Nat, dissolve_delay : Nat) : async () {
+
+    };
+
+    public shared ({ caller }) func completely_dissolve_neuron(id : Nat) : async () {
+        //internal_transfer
+    };
+
+    public func calculate_neuron_vp(owner : Principal, id : Nat) : async Float {
+        return 1.0
     };
 
     //advanced
 
     // modify_parameters
     // quadratic_voting
-    // createNeuron
-    // dissolveNeuron
-    //toptup
 
 }

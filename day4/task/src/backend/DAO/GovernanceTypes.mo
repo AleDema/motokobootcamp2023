@@ -1,4 +1,9 @@
 module GovernanceTypes {
+
+    public type VotingPowerLogic = {
+        #basic;
+        #advanced
+    };
     public type ProposalId = Nat;
     public type Proposal = {
         id : ProposalId;
